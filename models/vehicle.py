@@ -1,4 +1,6 @@
-class Vehicle:
+from abc import ABC, abstractmethod
+
+class Vehicle(ABC):
     def __init__(self, vehicle_id: str, model: str, battery_percentage: float):
         self.vehicle_id = vehicle_id
         self.model = model
@@ -6,12 +8,19 @@ class Vehicle:
         self.__maintenance_status = "OK"   # Private attribute
         self.__rental_price = 0.0          # Private attribute
 
-        #setter to validate battery
+        # setter to validate battery
         self.set_battery_percentage(battery_percentage)
 
 
-    # Battery Percentage Getter/Setter
+    # Abstract method
 
+    @abstractmethod
+    def calculate_trip_cost(self, distance: float):
+        """Calculate the cost of a trip for this vehicle type."""
+        pass
+
+
+    # Battery Percentage Getter/Setter
     def get_battery_percentage(self):
         return self.__battery_percentage
 
@@ -23,7 +32,6 @@ class Vehicle:
 
 
     # Maintenance Status Getter/Setter
-
     def get_maintenance_status(self):
         return self.__maintenance_status
 
@@ -35,7 +43,6 @@ class Vehicle:
 
 
     # Rental Price Getter/Setter
-
     def get_rental_price(self):
         return self.__rental_price
 
@@ -46,8 +53,7 @@ class Vehicle:
             raise ValueError("Rental price cannot be negative.")
 
 
-
-
+    # String representation
     def __str__(self):
         return (
             f"Vehicle ID: {self.vehicle_id}, Model: {self.model}, "

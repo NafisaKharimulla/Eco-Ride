@@ -19,7 +19,6 @@ class EcoRideMain:
                 rental_price = float(input("Rental Price: "))
                 maintenance_status = input("Maintenance Status (OK/Needs Service/Under Maintenance): ")
 
-                # Create vehicle based on type
                 if vehicle_type == "electriccar":
                     seating_capacity = int(input("Seating Capacity: "))
                     vehicle = ElectricCar(vehicle_id, model, battery, seating_capacity)
@@ -27,7 +26,8 @@ class EcoRideMain:
                     max_speed = float(input("Max Speed Limit (km/h): "))
                     vehicle = ElectricScooter(vehicle_id, model, battery, max_speed)
                 else:
-                    vehicle = Vehicle(vehicle_id, model, battery)
+                    print("Regular Vehicle cannot calculate trip cost in UC4.")
+                    continue
 
                 vehicle.set_rental_price(rental_price)
                 vehicle.set_maintenance_status(maintenance_status)
@@ -37,6 +37,12 @@ class EcoRideMain:
             print("\nAll Vehicles in the System:")
             for v in self.fleet_service.get_all_vehicles():
                 print(v)
+
+            # Example: Calculate trip cost
+            print("\nTrip Cost Calculation Example:")
+            for v in self.fleet_service.get_all_vehicles():
+                distance = float(input(f"Enter trip distance (km) for {v.vehicle_id}: "))
+                print(f"Trip cost for {v.vehicle_id}: Rs{v.calculate_trip_cost(distance):.2f}")
 
         except ValueError as ve:
             print(f"Error: {ve}")
