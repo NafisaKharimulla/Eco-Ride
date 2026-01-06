@@ -1,13 +1,14 @@
 from services.fleet_service import FleetService
-from models.vehicle import Vehicle
+from models.vehicle import ElectricCar, ElectricScooter
 
 
 def main():
+    print("Welcome to Eco-Ride Urban Mobility System")
+
     fleet = FleetService()
 
     while True:
-        print("\n===== Eco-Ride Multi-Hub Fleet System =====")
-        print("1. Add Hub")
+        print("\n1. Add Hub")
         print("2. Add Vehicle to Hub")
         print("3. View All Hubs")
         print("4. Exit")
@@ -15,27 +16,40 @@ def main():
         choice = input("Enter choice: ")
 
         if choice == "1":
-            name = input("Enter Hub Name: ")
-            fleet.add_hub(name)
+            hub = input("Enter hub name: ")
+            fleet.add_hub(hub)
 
         elif choice == "2":
-            hub = input("Enter Hub Name: ")
-            vid = input("Enter Vehicle ID: ")
-            model = input("Enter Model Name: ")
-            battery = int(input("Enter Battery Level: "))
+            hub = input("Enter hub name: ")
 
-            v = Vehicle(vid, model, battery)
-            fleet.add_vehicle_to_hub(hub, v)
+            vtype = input("Enter vehicle type (car/scooter): ").lower()
+            vid = input("Enter vehicle ID: ")
+            model = input("Enter model name: ")
+            battery = int(input("Enter battery percentage: "))
+
+            if vtype == "car":
+                seats = int(input("Enter seating capacity: "))
+                vehicle = ElectricCar(vid, model, battery, seats)
+
+            elif vtype == "scooter":
+                speed = int(input("Enter max speed: "))
+                vehicle = ElectricScooter(vid, model, battery, speed)
+
+            else:
+                print("Invalid vehicle type")
+                continue
+
+            fleet.add_vehicle_to_hub(hub, vehicle)
 
         elif choice == "3":
             fleet.view_all_hubs()
 
         elif choice == "4":
-            print("Exiting...")
+            print("Exiting system...")
             break
 
         else:
-            print("Invalid choice. Try again.")
+            print("Invalid choice")
 
 
 if __name__ == "__main__":
