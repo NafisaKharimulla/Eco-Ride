@@ -5,13 +5,13 @@ class Vehicle(ABC):
     def __init__(self, vehicle_id, model, battery_percentage):
         self.vehicle_id = vehicle_id
         self.model = model
-        self.__battery_percentage = battery_percentage
 
         # Encapsulation
+        self.__battery_percentage = battery_percentage
         self.__maintenance_status = "Good"
         self.__rental_price = 0
 
-    #  Getters
+    # Getters
     def get_battery_percentage(self):
         return self.__battery_percentage
 
@@ -35,13 +35,13 @@ class Vehicle(ABC):
         if price >= 0:
             self.__rental_price = price
         else:
-            raise ValueError("Price cannot be negative")
+            raise ValueError("Rental price cannot be negative")
 
-    # Equality Check
+    # Equality based on ID
     def __eq__(self, other):
         return isinstance(other, Vehicle) and self.vehicle_id == other.vehicle_id
 
-    # Mandatory Method
+    #  Abstract Method
     @abstractmethod
     def calculate_trip_cost(self, value):
         pass

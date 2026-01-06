@@ -11,7 +11,10 @@ def main():
         print("\n1. Add Hub")
         print("2. Add Vehicle to Hub")
         print("3. View All Hubs")
-        print("4. Exit")
+        print("4. Search Vehicles by Hub")
+        print("5. Search Vehicles with Battery > 80%")
+        print("6. Calculate Trip Cost (Polymorphism Demo)")
+        print("7. Exit")
 
         choice = input("Enter choice: ")
 
@@ -45,6 +48,30 @@ def main():
             fleet.view_all_hubs()
 
         elif choice == "4":
+            hub = input("Enter hub name to search: ")
+            fleet.search_by_hub(hub)
+
+        elif choice == "5":
+            fleet.search_by_battery()
+
+        #  UC-5 Polymorphism
+        elif choice == "6":
+            vtype = input("Enter vehicle type (car/scooter): ").lower()
+
+            if vtype == "car":
+                distance = float(input("Enter distance (km): "))
+                cost = ElectricCar("temp", "demo", 100, 4).calculate_trip_cost(distance)
+                print(f"Trip Cost = ₹{cost}")
+
+            elif vtype == "scooter":
+                minutes = float(input("Enter trip time (minutes): "))
+                cost = ElectricScooter("temp", "demo", 100, 40).calculate_trip_cost(minutes)
+                print(f"Trip Cost = ₹{cost}")
+
+            else:
+                print("Invalid vehicle type")
+
+        elif choice == "7":
             print("Exiting system...")
             break
 
