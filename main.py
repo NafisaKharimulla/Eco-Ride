@@ -1,16 +1,35 @@
-# This is a sample Python script.
-
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+from services.fleet_service import FleetService
+from models.vehicle import Vehicle
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+class EcoRideMain:
+    def __init__(self):
+        self.fleet_service = FleetService()
+
+    def start(self):
+        print("Welcome to Eco-Ride Urban Mobility System\n")
+        try:
+            num = int(input("How many vehicles do you want to add? "))
+            for i in range(num):
+                print(f"\nEnter details for Vehicle {i + 1}:")
+                vehicle_id = input("Vehicle ID: ")
+                model = input("Model: ")
+                battery_percentage = float(input("Battery Percentage: "))
+
+                vehicle = Vehicle(vehicle_id, model, battery_percentage)
+                self.fleet_service.add_vehicle(vehicle)
+
+            print("\nAll Vehicles in the System:")
+            for v in self.fleet_service.get_all_vehicles():
+                print(v)
+
+        except ValueError as ve:
+            print(f"Error: {ve}")
+        except Exception as e:
+            print(f"Unexpected error: {e}")
 
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
+if __name__ == "__main__":
+    app = EcoRideMain()
+    app.start()
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
