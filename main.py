@@ -14,9 +14,14 @@ class EcoRideMain:
                 print(f"\nEnter details for Vehicle {i + 1}:")
                 vehicle_id = input("Vehicle ID: ")
                 model = input("Model: ")
-                battery_percentage = float(input("Battery Percentage: "))
+                battery = float(input("Battery Percentage: "))
+                rental_price = float(input("Rental Price: "))
+                maintenance_status = input("Maintenance Status (OK/Needs Service/Under Maintenance): ")
 
-                vehicle = Vehicle(vehicle_id, model, battery_percentage)
+                vehicle = Vehicle(vehicle_id, model, battery)
+                vehicle.set_rental_price(rental_price)
+                vehicle.set_maintenance_status(maintenance_status)
+
                 self.fleet_service.add_vehicle(vehicle)
 
             print("\nAll Vehicles in the System:")
@@ -32,4 +37,3 @@ class EcoRideMain:
 if __name__ == "__main__":
     app = EcoRideMain()
     app.start()
-
