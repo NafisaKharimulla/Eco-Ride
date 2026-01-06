@@ -1,54 +1,42 @@
 from services.fleet_service import FleetService
 from models.vehicle import Vehicle
-from models.electric_vehicle import ElectricCar, ElectricScooter
 
-class EcoRideMain:
-    def __init__(self):
-        self.fleet_service = FleetService()
 
-    def start(self):
-        print("Welcome to Eco-Ride Urban Mobility System\n")
-        try:
-            num = int(input("How many vehicles do you want to add? "))
-            for i in range(num):
-                print(f"\nEnter details for Vehicle {i + 1}:")
-                vehicle_type = input("Type (Car/Scooter/ElectricCar/ElectricScooter): ").strip().lower()
-                vehicle_id = input("Vehicle ID: ")
-                model = input("Model: ")
-                battery = float(input("Battery Percentage: "))
-                rental_price = float(input("Rental Price: "))
-                maintenance_status = input("Maintenance Status (OK/Needs Service/Under Maintenance): ")
+def main():
+    fleet = FleetService()
 
-                if vehicle_type == "electriccar":
-                    seating_capacity = int(input("Seating Capacity: "))
-                    vehicle = ElectricCar(vehicle_id, model, battery, seating_capacity)
-                elif vehicle_type == "electricscooter":
-                    max_speed = float(input("Max Speed Limit (km/h): "))
-                    vehicle = ElectricScooter(vehicle_id, model, battery, max_speed)
-                else:
-                    print("Regular Vehicle cannot calculate trip cost in UC4.")
-                    continue
+    while True:
+        print("\n===== Eco-Ride Multi-Hub Fleet System =====")
+        print("1. Add Hub")
+        print("2. Add Vehicle to Hub")
+        print("3. View All Hubs")
+        print("4. Exit")
 
-                vehicle.set_rental_price(rental_price)
-                vehicle.set_maintenance_status(maintenance_status)
+        choice = input("Enter choice: ")
 
-                self.fleet_service.add_vehicle(vehicle)
+        if choice == "1":
+            name = input("Enter Hub Name: ")
+            fleet.add_hub(name)
 
-            print("\nAll Vehicles in the System:")
-            for v in self.fleet_service.get_all_vehicles():
-                print(v)
+        elif choice == "2":
+            hub = input("Enter Hub Name: ")
+            vid = input("Enter Vehicle ID: ")
+            model = input("Enter Model Name: ")
+            battery = int(input("Enter Battery Level: "))
 
-            # Example: Calculate trip cost
-            print("\nTrip Cost Calculation Example:")
-            for v in self.fleet_service.get_all_vehicles():
-                distance = float(input(f"Enter trip distance (km) for {v.vehicle_id}: "))
-                print(f"Trip cost for {v.vehicle_id}: Rs{v.calculate_trip_cost(distance):.2f}")
+            v = Vehicle(vid, model, battery)
+            fleet.add_vehicle_to_hub(hub, v)
 
-        except ValueError as ve:
-            print(f"Error: {ve}")
-        except Exception as e:
-            print(f"Unexpected error: {e}")
+        elif choice == "3":
+            fleet.view_all_hubs()
+
+        elif choice == "4":
+            print("Exiting...")
+            break
+
+        else:
+            print("Invalid choice. Try again.")
+
 
 if __name__ == "__main__":
-    app = EcoRideMain()
-    app.start()
+    main()
