@@ -10,7 +10,7 @@ class Vehicle:
         self.__maintenance_status = "Good"
         self.__status = status
 
-    # ===== Encapsulation Getters / Setters =====
+    #  Encapsulation Getters / Setters
     def get_status(self):
         return self.__status
 
@@ -26,11 +26,11 @@ class Vehicle:
     def set_maintenance_status(self, new_status):
         self.__maintenance_status = new_status
 
-    # ===== Polymorphism (base) =====
+    # Polymorphism (base)
     def calculate_trip_cost(self):
         return 0
 
-    # ===== Data Integrity (Duplicate Check) =====
+    #  Data Integrity (Duplicate Check)
     def __eq__(self, other):
         return isinstance(other, Vehicle) and self.vehicle_id == other.vehicle_id
 
