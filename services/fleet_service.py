@@ -1,77 +1,58 @@
-from models.vehicle import Vehicle, ElectricCar, ElectricScooter
+from models.electric_vehicle import ElectricCar, ElectricScooter
 
 
 class FleetService:
     def __init__(self):
-        self.hubs = {}
+        self.hubs = {}  # { hub_name : [vehicles] }
 
-    # Add Hub
     def add_hub(self, hub_name):
-        if hub_name in self.hubs:
-            print(f"Hub '{hub_name}' already exists.")
-        else:
+        if hub_name not in self.hubs:
             self.hubs[hub_name] = []
             print(f"Hub '{hub_name}' created successfully.")
+        else:
+            print("Hub already exists!")
 
-    #  Add Vehicle
-    def add_vehicle_to_hub(self, hub_name, vehicle: Vehicle):
+    def add_vehicle_to_hub(self, hub_name, vehicle):
         if hub_name not in self.hubs:
-            print(f"Hub '{hub_name}' does not exist. Please create it first.")
+            print("Hub does not exist. Create hub first.")
             return
 
-        duplicate = [v for v in self.hubs[hub_name] if v == vehicle]
-
-        if duplicate:
-            print(f" Vehicle with ID '{vehicle.vehicle_id}' already exists in hub '{hub_name}'.")
+        if any(v == vehicle for v in self.hubs[hub_name]):
+            print("Duplicate Vehicle ID! Not allowed.")
             return
 
         self.hubs[hub_name].append(vehicle)
-        print(f" Vehicle added successfully to hub '{hub_name}'.")
+        print("Vehicle added successfully.")
 
-    #  View Hubs
     def view_all_hubs(self):
         if not self.hubs:
-            print("No hubs available.")
+            print("No hubs found.")
             return
 
-        print("\n====== Fleet Hubs ======")
         for hub, vehicles in self.hubs.items():
             print(f"\nHub: {hub}")
-            if not vehicles:
-                print("  No vehicles in this hub.")
-            else:
-                for v in vehicles:
-                    print(" ", v)
+            for v in vehicles:
+                print(f"  {v}")
 
-    #  Search by Hub
     def search_by_hub(self, hub_name):
-        if hub_name not in self.hubs:
-            print(f"Hub '{hub_name}' does not exist.")
-            return
+        return self.hubs.get(hub_name, [])
 
-        vehicles = self.hubs[hub_name]
+    def search_battery_above_80(self):
+        return [
+            v
+            for vehicles in self.hubs.values()
+            for v in vehicles
+            if v.battery_level > 80
+        ]
 
-        if not vehicles:
-            print(f"No vehicles found in hub '{hub_name}'.")
-            return
+    def categorized_view(self):
+        categorized = {"Car": [], "Scooter": []}
 
-        print(f"\nVehicles in Hub: {hub_name}")
-        for v in vehicles:
-            print(" ", v)
+        for vehicles in self.hubs.values():
+            for v in vehicles:
+                if "Car" in v.__class__.__name__:
+                    categorized["Car"].append(v)
+                else:
+                    categorized["Scooter"].append(v)
 
-    #  Search by Battery
-    def search_by_battery(self):
-        print("\nVehicles with battery > 80%")
-        found = False
-
-        for hub, vehicles in self.hubs.items():
-            high_battery = list(filter(lambda v: v.get_battery_percentage() > 80, vehicles))
-
-            if high_battery:
-                found = True
-                print(f"\nHub: {hub}")
-                for v in high_battery:
-                    print(" ", v)
-
-        if not found:
-            print("No vehicles found with battery > 80%.")
+        return categorized
