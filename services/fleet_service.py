@@ -1,5 +1,5 @@
 from models.electric_vehicle import ElectricCar, ElectricScooter
-
+import csv
 
 class FleetService:
     def __init__(self):
@@ -84,7 +84,6 @@ class FleetService:
             self.hubs[hub_name],
             key=lambda v: v.model.lower()
         )
-
         print(f"Vehicles in hub '{hub_name}' sorted alphabetically by model.")
 
     # ===== UC12 Advanced Sorting =====
@@ -107,9 +106,9 @@ class FleetService:
 
         def fare_key(v):
             if isinstance(v, ElectricCar):
-                return v.calculate_trip_cost(1)  # fare per km
+                return v.calculate_trip_cost(1)
             elif isinstance(v, ElectricScooter):
-                return v.calculate_trip_cost(1)  # fare per min
+                return v.calculate_trip_cost(1)
             return 0
 
         self.hubs[hub_name] = sorted(
@@ -118,3 +117,52 @@ class FleetService:
             reverse=True
         )
         print(f"Vehicles in hub '{hub_name}' sorted by fare (high to low).")
+
+    # ===== UC13 File I/O =====
+    def save_to_csv(self, filename="fleet_data.csv"):
+        with open(filename, mode="w", newline="") as file:
+            writer = csv.writer(file)
+            writer.writerow([
+                "hub_name", "vehicle_type", "vehicle_id", "model",
+                "battery_level", "status", "seating_capacity", "max_speed_limit"
+            ])
+            for hub, vehicles in self.hubs.items():
+                for v in vehicles:
+                    vehicle_type = "Car" if isinstance(v, ElectricCar) else "Scooter"
+                    seats = v.seating_capacity if isinstance(v, ElectricCar) else ""
+                    speed = v.max_speed_limit if isinstance(v, ElectricScooter) else ""
+                    writer.writerow([
+                        hub, vehicle_type, v.vehicle_id, v.model,
+                        v.battery_level, v.get_status(), seats, speed
+                    ])
+        print(f"Fleet saved to '{filename}' successfully.")
+
+    def load_from_csv(self, filename="fleet_data.csv"):
+        try:
+            with open(filename, mode="r", newline="") as file:
+                reader = csv.DictReader(file)
+                for row in reader:
+                    hub = row["hub_name"]
+                    vtype = row["vehicle_type"]
+                    vid = row["vehicle_id"]
+                    model = row["model"]
+                    battery = int(row["battery_level"])
+                    status = row["status"]
+
+                    if hub not in self.hubs:
+                        self.hubs[hub] = []
+
+                    if vtype == "Car":
+                        seats = int(row["seating_capacity"])
+                        vehicle = ElectricCar(vid, model, battery, status, seats)
+                    elif vtype == "Scooter":
+                        speed = int(row["max_speed_limit"])
+                        vehicle = ElectricScooter(vid, model, battery, status, speed)
+                    else:
+                        continue
+
+                    if not any(v == vehicle for v in self.hubs[hub]):
+                        self.hubs[hub].append(vehicle)
+            print(f"Fleet loaded from '{filename}' successfully.")
+        except FileNotFoundError:
+            print(f"No existing fleet data found at '{filename}'. Starting fresh.")

@@ -1,6 +1,5 @@
 from models.vehicle import Vehicle
 
-
 class ElectricCar(Vehicle):
     def __init__(self, vehicle_id, model, battery_level, status="Available", seating_capacity=4):
         super().__init__(vehicle_id, model, battery_level, status)
@@ -12,7 +11,6 @@ class ElectricCar(Vehicle):
 
     def __str__(self):
         return f"[Car] {super().__str__()}, Seats: {self.seating_capacity}"
-
 
 class ElectricScooter(Vehicle):
     def __init__(self, vehicle_id, model, battery_level, status="Available", max_speed_limit=60):

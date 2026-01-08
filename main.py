@@ -1,12 +1,11 @@
 from services.fleet_service import FleetService
 from models.electric_vehicle import ElectricCar, ElectricScooter
 
-
 def main():
-
     print("Welcome to Eco-Ride Urban Mobility System")
 
     fleet = FleetService()
+    fleet.load_from_csv()  # Load fleet on startup
 
     while True:
         print("\n=== Eco Ride Fleet System ===")
@@ -20,7 +19,8 @@ def main():
         print("8. Sort Vehicles in a Hub (Alphabetically)")
         print("9. Sort Vehicles in Hub by Battery Level")
         print("10. Sort Vehicles in Hub by Fare Price")
-        print("11. Exit")
+        print("11. Save Fleet to CSV")
+        print("12. Exit")
 
         choice = input("Enter choice: ")
 
@@ -100,12 +100,15 @@ def main():
             fleet.view_all_hubs()
 
         elif choice == "11":
+            fleet.save_to_csv()
+
+        elif choice == "12":
+            fleet.save_to_csv()  # Auto-save on exit
             print("Exiting...")
             break
 
         else:
             print("Invalid choice")
-
 
 if __name__ == "__main__":
     main()

@@ -1,6 +1,5 @@
 from abc import ABC, abstractmethod
 
-
 class Vehicle(ABC):
     def __init__(self, vehicle_id, model, battery_level, status="Available"):
         self.vehicle_id = vehicle_id
