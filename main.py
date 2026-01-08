@@ -1,54 +1,106 @@
 from services.fleet_service import FleetService
-from models.vehicle import Vehicle
 from models.electric_vehicle import ElectricCar, ElectricScooter
 
-class EcoRideMain:
-    def __init__(self):
-        self.fleet_service = FleetService()
 
-    def start(self):
-        print("Welcome to Eco-Ride Urban Mobility System\n")
-        try:
-            num = int(input("How many vehicles do you want to add? "))
-            for i in range(num):
-                print(f"\nEnter details for Vehicle {i + 1}:")
-                vehicle_type = input("Type (Car/Scooter/ElectricCar/ElectricScooter): ").strip().lower()
-                vehicle_id = input("Vehicle ID: ")
-                model = input("Model: ")
-                battery = float(input("Battery Percentage: "))
-                rental_price = float(input("Rental Price: "))
-                maintenance_status = input("Maintenance Status (OK/Needs Service/Under Maintenance): ")
+def main():
 
-                if vehicle_type == "electriccar":
-                    seating_capacity = int(input("Seating Capacity: "))
-                    vehicle = ElectricCar(vehicle_id, model, battery, seating_capacity)
-                elif vehicle_type == "electricscooter":
-                    max_speed = float(input("Max Speed Limit (km/h): "))
-                    vehicle = ElectricScooter(vehicle_id, model, battery, max_speed)
-                else:
-                    print("Regular Vehicle cannot calculate trip cost in UC4.")
-                    continue
+    print("Welcome to Eco-Ride Urban Mobility System")
 
-                vehicle.set_rental_price(rental_price)
-                vehicle.set_maintenance_status(maintenance_status)
+    fleet = FleetService()
 
-                self.fleet_service.add_vehicle(vehicle)
+    while True:
+        print("\n=== Eco Ride Fleet System ===")
+        print("1. Add Hub")
+        print("2. Add Vehicle to Hub")
+        print("3. View All Hubs")
+        print("4. Search Vehicles in Hub")
+        print("5. Search Vehicles Battery > 80%")
+        print("6. Categorized View (Cars / Scooters)")
+        print("7. Fleet Analytics (Status Summary)")
+        print("8. Sort Vehicles in a Hub (Alphabetically)")
+        print("9. Exit")
 
-            print("\nAll Vehicles in the System:")
-            for v in self.fleet_service.get_all_vehicles():
+        choice = input("Enter choice: ")
+
+        if choice == "1":
+            hub = input("Enter Hub Name: ")
+            fleet.add_hub(hub)
+
+        elif choice == "2":
+            hub = input("Enter Hub Name: ")
+
+            vtype = input("Enter Type (car/scooter): ").lower()
+            vid = input("Enter Vehicle ID: ")
+            model = input("Enter Model Name: ")
+            battery = int(input("Enter Battery Level: "))
+            status = input("Enter Status (Available / On Trip / Under Maintenance): ")
+
+            if vtype == "car":
+                seats = int(input("Enter Seating Capacity: "))
+                vehicle = ElectricCar(vid, model, battery, status, seats)
+
+            elif vtype == "scooter":
+                speed = int(input("Enter Max Speed Limit: "))
+                vehicle = ElectricScooter(vid, model, battery, status, speed)
+
+            else:
+                print("Invalid type")
+                continue
+
+            fleet.add_vehicle_to_hub(hub, vehicle)
+
+        elif choice == "3":
+            fleet.view_all_hubs()
+
+        elif choice == "4":
+            hub = input("Enter Hub Name: ")
+            vehicles = fleet.search_by_hub(hub)
+
+            if vehicles:
+                print(f"\nVehicles in {hub}:")
+                for v in vehicles:
+                    print(v)
+            else:
+                print("No vehicles found or hub does not exist.")
+
+        elif choice == "5":
+            results = fleet.search_battery_above_80()
+            print("\nVehicles with battery > 80%:")
+            for v in results:
                 print(v)
 
-            # Example: Calculate trip cost
-            print("\nTrip Cost Calculation Example:")
-            for v in self.fleet_service.get_all_vehicles():
-                distance = float(input(f"Enter trip distance (km) for {v.vehicle_id}: "))
-                print(f"Trip cost for {v.vehicle_id}: Rs{v.calculate_trip_cost(distance):.2f}")
+        elif choice == "6":
+            categorized = fleet.categorized_view()
 
-        except ValueError as ve:
-            print(f"Error: {ve}")
-        except Exception as e:
-            print(f"Unexpected error: {e}")
+            print("\nCars:")
+            for c in categorized["Car"]:
+                print(c)
+
+            print("\nScooters:")
+            for s in categorized["Scooter"]:
+                print(s)
+
+        elif choice == "7":
+            summary = fleet.get_status_summary()
+
+            print("\n===== Fleet Status Summary =====")
+            print(f"Available          : {summary['Available']}")
+            print(f"On Trip            : {summary['On Trip']}")
+            print(f"Under Maintenance  : {summary['Under Maintenance']}")
+            print("================================")
+
+        elif choice == "8":
+            hub = input("Enter Hub Name: ")
+            fleet.sort_vehicles_in_hub(hub)
+            fleet.view_all_hubs()
+
+        elif choice == "9":
+            print("Exiting...")
+            break
+
+        else:
+            print("Invalid choice")
+
 
 if __name__ == "__main__":
-    app = EcoRideMain()
-    app.start()
+    main()

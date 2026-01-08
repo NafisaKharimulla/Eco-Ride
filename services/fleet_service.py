@@ -1,30 +1,88 @@
-from models.vehicle import Vehicle
+from models.electric_vehicle import ElectricCar, ElectricScooter
+
 
 class FleetService:
     def __init__(self):
-        self.vehicles = []
+        self.hubs = {}   # { hub_name : [Vehicle Objects] }
 
-    def add_vehicle(self, vehicle: Vehicle):
-        for v in self.vehicles:
-            if v.vehicle_id == vehicle.vehicle_id:
-                raise ValueError(f"Vehicle with ID {vehicle.vehicle_id} already exists!")
-        self.vehicles.append(vehicle)
-        return vehicle
+    # ===== UC6: Add Hub =====
+    def add_hub(self, hub_name):
+        if hub_name not in self.hubs:
+            self.hubs[hub_name] = []
+            print(f"Hub '{hub_name}' created successfully.")
+        else:
+            print("Hub already exists!")
 
-    def get_all_vehicles(self):
-        return self.vehicles
+    # ===== UC7: Prevent Duplicate Vehicle IDs =====
+    def add_vehicle_to_hub(self, hub_name, vehicle):
+        if hub_name not in self.hubs:
+            print("Hub does not exist. Create hub first.")
+            return
 
-    # Update maintenance or rental price by vehicle ID
-    def update_maintenance(self, vehicle_id: str, status: str):
-        for v in self.vehicles:
-            if v.vehicle_id == vehicle_id:
-                v.set_maintenance_status(status)
-                return v
-        raise ValueError(f"Vehicle with ID {vehicle_id} not found.")
+        if any(v == vehicle for v in self.hubs[hub_name]):
+            print("Duplicate Vehicle ID! Not allowed.")
+            return
 
-    def update_rental_price(self, vehicle_id: str, price: float):
-        for v in self.vehicles:
-            if v.vehicle_id == vehicle_id:
-                v.set_rental_price(price)
-                return v
-        raise ValueError(f"Vehicle with ID {vehicle_id} not found.")
+        self.hubs[hub_name].append(vehicle)
+        print("Vehicle added successfully.")
+
+    # ===== UC6 View =====
+    def view_all_hubs(self):
+        if not self.hubs:
+            print("No hubs found.")
+            return
+
+        for hub, vehicles in self.hubs.items():
+            print(f"\nHub: {hub}")
+            for v in vehicles:
+                print(f"  {v}")
+
+    # ===== UC8 Search =====
+    def search_by_hub(self, hub_name):
+        return self.hubs.get(hub_name, [])
+
+    def search_battery_above_80(self):
+        return [
+            v
+            for vehicles in self.hubs.values()
+            for v in vehicles
+            if v.battery_level > 80
+        ]
+
+    # ===== UC9 Categorized View =====
+    def categorized_view(self):
+        categorized = {"Car": [], "Scooter": []}
+
+        for vehicles in self.hubs.values():
+            for v in vehicles:
+                if isinstance(v, ElectricCar):
+                    categorized["Car"].append(v)
+                elif isinstance(v, ElectricScooter):
+                    categorized["Scooter"].append(v)
+
+        return categorized
+
+    # ===== UC10 Fleet Analytics (Status Summary) =====
+    def get_status_summary(self):
+        summary = {"Available": 0, "On Trip": 0, "Under Maintenance": 0}
+
+        for vehicles in self.hubs.values():
+            for v in vehicles:
+                status = v.get_status()
+                if status in summary:
+                    summary[status] += 1
+
+        return summary
+
+    # ===== UC11 Sort Vehicles in a Hub by Model Name =====
+    def sort_vehicles_in_hub(self, hub_name):
+        if hub_name not in self.hubs:
+            print("Hub does not exist.")
+            return
+
+        self.hubs[hub_name] = sorted(
+            self.hubs[hub_name],
+            key=lambda v: v.model.lower()
+        )
+
+        print(f"Vehicles in hub '{hub_name}' sorted alphabetically by model.")

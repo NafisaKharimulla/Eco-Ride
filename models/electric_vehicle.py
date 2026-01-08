@@ -1,26 +1,25 @@
 from models.vehicle import Vehicle
 
+
 class ElectricCar(Vehicle):
-    def __init__(self, vehicle_id: str, model: str, battery_percentage: float, seating_capacity: int):
-        super().__init__(vehicle_id, model, battery_percentage)
+    def __init__(self, vehicle_id, model, battery_level, status="Available", seating_capacity=4):
+        super().__init__(vehicle_id, model, battery_level, status)
         self.seating_capacity = seating_capacity
 
-    def calculate_trip_cost(self, distance: float):
-        """ElectricCar: Cost = rental price per km * distance + fixed fee"""
-        return self.get_rental_price() * distance + 10  # e.g., fixed fee $10
+    def calculate_trip_cost(self, distance_km):
+        return 5.0 + (0.5 * distance_km)
 
     def __str__(self):
-        return super().__str__() + f", Seating Capacity: {self.seating_capacity}"
+        return f"[Car] {super().__str__()}, Seats: {self.seating_capacity}"
 
 
 class ElectricScooter(Vehicle):
-    def __init__(self, vehicle_id: str, model: str, battery_percentage: float, max_speed_limit: float):
-        super().__init__(vehicle_id, model, battery_percentage)
+    def __init__(self, vehicle_id, model, battery_level, status="Available", max_speed_limit=60):
+        super().__init__(vehicle_id, model, battery_level, status)
         self.max_speed_limit = max_speed_limit
 
-    def calculate_trip_cost(self, distance: float):
-        """ElectricScooter: Cost = rental price per km * distance"""
-        return self.get_rental_price() * distance
+    def calculate_trip_cost(self, minutes):
+        return 1.0 + (0.15 * minutes)
 
     def __str__(self):
-        return super().__str__() + f", Max Speed Limit: {self.max_speed_limit} km/h"
+        return f"[Scooter] {super().__str__()}, Max Speed: {self.max_speed_limit} km/h"
