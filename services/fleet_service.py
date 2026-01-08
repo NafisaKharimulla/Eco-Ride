@@ -86,3 +86,35 @@ class FleetService:
         )
 
         print(f"Vehicles in hub '{hub_name}' sorted alphabetically by model.")
+
+    # ===== UC12 Advanced Sorting =====
+    def sort_vehicles_by_battery(self, hub_name):
+        if hub_name not in self.hubs:
+            print("Hub does not exist.")
+            return
+
+        self.hubs[hub_name] = sorted(
+            self.hubs[hub_name],
+            key=lambda v: v.battery_level,
+            reverse=True
+        )
+        print(f"Vehicles in hub '{hub_name}' sorted by battery level (high to low).")
+
+    def sort_vehicles_by_fare(self, hub_name):
+        if hub_name not in self.hubs:
+            print("Hub does not exist.")
+            return
+
+        def fare_key(v):
+            if isinstance(v, ElectricCar):
+                return v.calculate_trip_cost(1)  # fare per km
+            elif isinstance(v, ElectricScooter):
+                return v.calculate_trip_cost(1)  # fare per min
+            return 0
+
+        self.hubs[hub_name] = sorted(
+            self.hubs[hub_name],
+            key=fare_key,
+            reverse=True
+        )
+        print(f"Vehicles in hub '{hub_name}' sorted by fare (high to low).")

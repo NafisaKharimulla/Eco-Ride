@@ -18,7 +18,9 @@ def main():
         print("6. Categorized View (Cars / Scooters)")
         print("7. Fleet Analytics (Status Summary)")
         print("8. Sort Vehicles in a Hub (Alphabetically)")
-        print("9. Exit")
+        print("9. Sort Vehicles in Hub by Battery Level")
+        print("10. Sort Vehicles in Hub by Fare Price")
+        print("11. Exit")
 
         choice = input("Enter choice: ")
 
@@ -28,7 +30,6 @@ def main():
 
         elif choice == "2":
             hub = input("Enter Hub Name: ")
-
             vtype = input("Enter Type (car/scooter): ").lower()
             vid = input("Enter Vehicle ID: ")
             model = input("Enter Model Name: ")
@@ -38,11 +39,9 @@ def main():
             if vtype == "car":
                 seats = int(input("Enter Seating Capacity: "))
                 vehicle = ElectricCar(vid, model, battery, status, seats)
-
             elif vtype == "scooter":
                 speed = int(input("Enter Max Speed Limit: "))
                 vehicle = ElectricScooter(vid, model, battery, status, speed)
-
             else:
                 print("Invalid type")
                 continue
@@ -55,7 +54,6 @@ def main():
         elif choice == "4":
             hub = input("Enter Hub Name: ")
             vehicles = fleet.search_by_hub(hub)
-
             if vehicles:
                 print(f"\nVehicles in {hub}:")
                 for v in vehicles:
@@ -71,18 +69,15 @@ def main():
 
         elif choice == "6":
             categorized = fleet.categorized_view()
-
             print("\nCars:")
             for c in categorized["Car"]:
                 print(c)
-
             print("\nScooters:")
             for s in categorized["Scooter"]:
                 print(s)
 
         elif choice == "7":
             summary = fleet.get_status_summary()
-
             print("\n===== Fleet Status Summary =====")
             print(f"Available          : {summary['Available']}")
             print(f"On Trip            : {summary['On Trip']}")
@@ -95,6 +90,16 @@ def main():
             fleet.view_all_hubs()
 
         elif choice == "9":
+            hub = input("Enter Hub Name: ")
+            fleet.sort_vehicles_by_battery(hub)
+            fleet.view_all_hubs()
+
+        elif choice == "10":
+            hub = input("Enter Hub Name: ")
+            fleet.sort_vehicles_by_fare(hub)
+            fleet.view_all_hubs()
+
+        elif choice == "11":
             print("Exiting...")
             break
 
