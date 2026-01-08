@@ -14,7 +14,7 @@ class FleetService:
         else:
             print("Hub already exists!")
 
-    #  UC7: Prevent Duplicate Vehicle IDs
+    # UC7: Prevent Duplicate Vehicle IDs
     def add_vehicle_to_hub(self, hub_name, vehicle):
         if hub_name not in self.hubs:
             print("Hub does not exist. Create hub first.")
@@ -27,7 +27,7 @@ class FleetService:
         self.hubs[hub_name].append(vehicle)
         print("Vehicle added successfully.")
 
-    # UC6 View
+    #  UC6 View
     def view_all_hubs(self):
         if not self.hubs:
             print("No hubs found.")
