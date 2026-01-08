@@ -3,9 +3,9 @@ from models.electric_vehicle import ElectricCar, ElectricScooter
 
 class FleetService:
     def __init__(self):
-        self.hubs = {}  # { hub_name : [Vehicle Objects] }
+        self.hubs = {}   # { hub_name : [Vehicle Objects] }
 
-    #  UC6: Add Hub
+    # ===== UC6: Add Hub =====
     def add_hub(self, hub_name):
         if hub_name not in self.hubs:
             self.hubs[hub_name] = []
@@ -13,7 +13,7 @@ class FleetService:
         else:
             print("Hub already exists!")
 
-    #  UC7: Prevent Duplicate Vehicle IDs
+    # ===== UC7: Prevent Duplicate Vehicle IDs =====
     def add_vehicle_to_hub(self, hub_name, vehicle):
         if hub_name not in self.hubs:
             print("Hub does not exist. Create hub first.")
@@ -26,7 +26,7 @@ class FleetService:
         self.hubs[hub_name].append(vehicle)
         print("Vehicle added successfully.")
 
-    # UC6 View
+    # ===== UC6 View =====
     def view_all_hubs(self):
         if not self.hubs:
             print("No hubs found.")
@@ -37,7 +37,7 @@ class FleetService:
             for v in vehicles:
                 print(f"  {v}")
 
-    #  UC8 Search
+    # ===== UC8 Search =====
     def search_by_hub(self, hub_name):
         return self.hubs.get(hub_name, [])
 
@@ -49,20 +49,20 @@ class FleetService:
             if v.battery_level > 80
         ]
 
-    #  UC9 Categorized View
+    # ===== UC9 Categorized View =====
     def categorized_view(self):
         categorized = {"Car": [], "Scooter": []}
 
         for vehicles in self.hubs.values():
             for v in vehicles:
-                if "Car" in v.__class__.__name__:
+                if isinstance(v, ElectricCar):
                     categorized["Car"].append(v)
-                else:
+                elif isinstance(v, ElectricScooter):
                     categorized["Scooter"].append(v)
 
         return categorized
 
-    # UC10 Fleet Analytics (Status Summary)
+    # ===== UC10 Fleet Analytics (Status Summary) =====
     def get_status_summary(self):
         summary = {"Available": 0, "On Trip": 0, "Under Maintenance": 0}
 
@@ -73,3 +73,16 @@ class FleetService:
                     summary[status] += 1
 
         return summary
+
+    # ===== UC11 Sort Vehicles Alphabetically =====
+    def sort_vehicles_in_hub(self, hub_name):
+        if hub_name not in self.hubs:
+            print("Hub does not exist.")
+            return
+
+        self.hubs[hub_name] = sorted(
+            self.hubs[hub_name],
+            key=lambda v: v.model.lower()
+        )
+
+        print(f"Vehicles in hub '{hub_name}' sorted alphabetically by model.")

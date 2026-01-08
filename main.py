@@ -1,6 +1,7 @@
 from services.fleet_service import FleetService
 from models.electric_vehicle import ElectricCar, ElectricScooter
 
+
 def main():
 
     print("Welcome to Eco-Ride Urban Mobility System")
@@ -16,7 +17,8 @@ def main():
         print("5. Search Vehicles Battery > 80%")
         print("6. Categorized View (Cars / Scooters)")
         print("7. Fleet Analytics (Status Summary)")
-        print("8. Exit")
+        print("8. Sort Vehicles in a Hub (Alphabetically)")
+        print("9. Exit")
 
         choice = input("Enter choice: ")
 
@@ -31,7 +33,6 @@ def main():
             vid = input("Enter Vehicle ID: ")
             model = input("Enter Model Name: ")
             battery = int(input("Enter Battery Level: "))
-
             status = input("Enter Status (Available / On Trip / Under Maintenance): ")
 
             if vtype == "car":
@@ -89,6 +90,11 @@ def main():
             print("================================")
 
         elif choice == "8":
+            hub = input("Enter Hub Name: ")
+            fleet.sort_vehicles_in_hub(hub)
+            fleet.view_all_hubs()
+
+        elif choice == "9":
             print("Exiting...")
             break
 

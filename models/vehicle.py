@@ -1,4 +1,7 @@
-class Vehicle:
+from abc import ABC, abstractmethod
+
+
+class Vehicle(ABC):
     def __init__(self, vehicle_id, model, battery_level, status="Available"):
         self.vehicle_id = vehicle_id
         self.model = model
@@ -7,10 +10,11 @@ class Vehicle:
             raise ValueError("Battery level must be between 0–100")
         self.battery_level = battery_level
 
+        # Encapsulation
         self.__maintenance_status = "Good"
         self.__status = status
 
-    #  Encapsulation Getters / Setters
+    # ===== Encapsulation Getters / Setters =====
     def get_status(self):
         return self.__status
 
@@ -26,15 +30,20 @@ class Vehicle:
     def set_maintenance_status(self, new_status):
         self.__maintenance_status = new_status
 
-    # Polymorphism (base)
-    def calculate_trip_cost(self):
-        return 0
+    # ===== UC4: Abstract Fare Contract =====
+    @abstractmethod
+    def calculate_trip_cost(self, value):
+        pass
 
-    #  Data Integrity (Duplicate Check)
+    # ===== UC7: Data Integrity Duplicate Check =====
     def __eq__(self, other):
         return isinstance(other, Vehicle) and self.vehicle_id == other.vehicle_id
 
+    # ===== UC11: Clean Print =====
     def __str__(self):
-        return (f"ID: {self.vehicle_id}, Model: {self.model}, "
-                f"Battery: {self.battery_level}%, "
-                f"Status: {self.__status}")
+        return (
+            f"ID: {self.vehicle_id}, "
+            f"Model: {self.model}, "
+            f"Battery: {self.battery_level}%, "
+            f"Status: {self.__status}"
+        )

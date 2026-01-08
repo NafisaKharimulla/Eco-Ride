@@ -1,10 +1,12 @@
 from models.vehicle import Vehicle
 
+
 class ElectricCar(Vehicle):
     def __init__(self, vehicle_id, model, battery_level, status="Available", seating_capacity=4):
         super().__init__(vehicle_id, model, battery_level, status)
         self.seating_capacity = seating_capacity
 
+    # UC5 Polymorphism
     def calculate_trip_cost(self, distance_km):
         return 5.0 + (0.5 * distance_km)
 
@@ -17,6 +19,7 @@ class ElectricScooter(Vehicle):
         super().__init__(vehicle_id, model, battery_level, status)
         self.max_speed_limit = max_speed_limit
 
+    # UC5 Polymorphism
     def calculate_trip_cost(self, minutes):
         return 1.0 + (0.15 * minutes)
 
