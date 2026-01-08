@@ -1,11 +1,12 @@
 from models.electric_vehicle import ElectricCar, ElectricScooter
 import csv
+import json
 
 class FleetService:
     def __init__(self):
         self.hubs = {}   # { hub_name : [Vehicle Objects] }
 
-    # ===== UC6: Add Hub =====
+    #  UC6: Add Hub
     def add_hub(self, hub_name):
         if hub_name not in self.hubs:
             self.hubs[hub_name] = []
@@ -13,7 +14,7 @@ class FleetService:
         else:
             print("Hub already exists!")
 
-    # ===== UC7: Prevent Duplicate Vehicle IDs =====
+    #  UC7: Prevent Duplicate Vehicle IDs
     def add_vehicle_to_hub(self, hub_name, vehicle):
         if hub_name not in self.hubs:
             print("Hub does not exist. Create hub first.")
@@ -26,7 +27,7 @@ class FleetService:
         self.hubs[hub_name].append(vehicle)
         print("Vehicle added successfully.")
 
-    # ===== UC6 View =====
+    # UC6 View
     def view_all_hubs(self):
         if not self.hubs:
             print("No hubs found.")
@@ -37,7 +38,7 @@ class FleetService:
             for v in vehicles:
                 print(f"  {v}")
 
-    # ===== UC8 Search =====
+    #  UC8 Search
     def search_by_hub(self, hub_name):
         return self.hubs.get(hub_name, [])
 
@@ -49,7 +50,7 @@ class FleetService:
             if v.battery_level > 80
         ]
 
-    # ===== UC9 Categorized View =====
+    #  UC9 Categorized View
     def categorized_view(self):
         categorized = {"Car": [], "Scooter": []}
 
@@ -62,7 +63,7 @@ class FleetService:
 
         return categorized
 
-    # ===== UC10 Fleet Analytics (Status Summary) =====
+    #  UC10 Fleet Analytics (Status Summary)
     def get_status_summary(self):
         summary = {"Available": 0, "On Trip": 0, "Under Maintenance": 0}
 
@@ -74,7 +75,7 @@ class FleetService:
 
         return summary
 
-    # ===== UC11 Sort Vehicles Alphabetically =====
+    #  UC11 Sort Vehicles Alphabetically
     def sort_vehicles_in_hub(self, hub_name):
         if hub_name not in self.hubs:
             print("Hub does not exist.")
@@ -86,7 +87,7 @@ class FleetService:
         )
         print(f"Vehicles in hub '{hub_name}' sorted alphabetically by model.")
 
-    # ===== UC12 Advanced Sorting =====
+    #  UC12 Advanced Sorting
     def sort_vehicles_by_battery(self, hub_name):
         if hub_name not in self.hubs:
             print("Hub does not exist.")
@@ -118,7 +119,7 @@ class FleetService:
         )
         print(f"Vehicles in hub '{hub_name}' sorted by fare (high to low).")
 
-    # ===== UC13 File I/O =====
+    #  UC13 CSV File I/O
     def save_to_csv(self, filename="fleet_data.csv"):
         with open(filename, mode="w", newline="") as file:
             writer = csv.writer(file)
@@ -165,4 +166,56 @@ class FleetService:
                         self.hubs[hub].append(vehicle)
             print(f"Fleet loaded from '{filename}' successfully.")
         except FileNotFoundError:
-            print(f"No existing fleet data found at '{filename}'. Starting fresh.")
+            print(f"No existing CSV fleet data found. Starting fresh.")
+
+    #  UC14 JSON File I/O
+    def save_to_json(self, filename="fleet_data.json"):
+        data = {}
+        for hub, vehicles in self.hubs.items():
+            data[hub] = []
+            for v in vehicles:
+                vehicle_dict = {
+                    "vehicle_type": "Car" if isinstance(v, ElectricCar) else "Scooter",
+                    "vehicle_id": v.vehicle_id,
+                    "model": v.model,
+                    "battery_level": v.battery_level,
+                    "status": v.get_status(),
+                }
+                if isinstance(v, ElectricCar):
+                    vehicle_dict["seating_capacity"] = v.seating_capacity
+                elif isinstance(v, ElectricScooter):
+                    vehicle_dict["max_speed_limit"] = v.max_speed_limit
+                data[hub].append(vehicle_dict)
+
+        with open(filename, "w") as f:
+            json.dump(data, f, indent=4)
+        print(f"Fleet saved to '{filename}' successfully.")
+
+    def load_from_json(self, filename="fleet_data.json"):
+        try:
+            with open(filename, "r") as f:
+                data = json.load(f)
+                for hub, vehicles in data.items():
+                    if hub not in self.hubs:
+                        self.hubs[hub] = []
+                    for v in vehicles:
+                        vtype = v.get("vehicle_type")
+                        vid = v.get("vehicle_id")
+                        model = v.get("model")
+                        battery = int(v.get("battery_level"))
+                        status = v.get("status")
+
+                        if vtype == "Car":
+                            seats = int(v.get("seating_capacity", 4))
+                            vehicle = ElectricCar(vid, model, battery, status, seats)
+                        elif vtype == "Scooter":
+                            speed = int(v.get("max_speed_limit", 60))
+                            vehicle = ElectricScooter(vid, model, battery, status, speed)
+                        else:
+                            continue
+
+                        if not any(existing_v == vehicle for existing_v in self.hubs[hub]):
+                            self.hubs[hub].append(vehicle)
+            print(f"Fleet loaded from '{filename}' successfully.")
+        except FileNotFoundError:
+            print(f"No JSON file found. Starting fresh.")

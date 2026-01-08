@@ -1,0 +1,12 @@
+{
+    "superMarket": [
+        {
+            "vehicle_type": "Car",
+            "vehicle_id": "1258",
+            "model": "Audi",
+            "battery_level": 65,
+            "status": "On Trip",
+            "seating_capacity": 6
+        }
+    ]
+}

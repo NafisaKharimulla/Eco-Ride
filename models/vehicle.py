@@ -13,7 +13,7 @@ class Vehicle(ABC):
         self.__maintenance_status = "Good"
         self.__status = status
 
-    # ===== Encapsulation Getters / Setters =====
+    #  Encapsulation Getters / Setters
     def get_status(self):
         return self.__status
 
@@ -29,16 +29,16 @@ class Vehicle(ABC):
     def set_maintenance_status(self, new_status):
         self.__maintenance_status = new_status
 
-    # ===== UC4: Abstract Fare Contract =====
+    #  UC4: Abstract Fare Contract
     @abstractmethod
     def calculate_trip_cost(self, value):
         pass
 
-    # ===== UC7: Data Integrity Duplicate Check =====
+    #  UC7: Data Integrity Duplicate Check
     def __eq__(self, other):
         return isinstance(other, Vehicle) and self.vehicle_id == other.vehicle_id
 
-    # ===== UC11: Clean Print =====
+    #  UC11: Clean Print
     def __str__(self):
         return (
             f"ID: {self.vehicle_id}, "

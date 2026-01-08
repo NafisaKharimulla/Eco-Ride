@@ -5,7 +5,10 @@ def main():
     print("Welcome to Eco-Ride Urban Mobility System")
 
     fleet = FleetService()
-    fleet.load_from_csv()  # Load fleet on startup
+    try:
+        fleet.load_from_json()
+    except:
+        fleet.load_from_csv()
 
     while True:
         print("\n=== Eco Ride Fleet System ===")
@@ -16,11 +19,12 @@ def main():
         print("5. Search Vehicles Battery > 80%")
         print("6. Categorized View (Cars / Scooters)")
         print("7. Fleet Analytics (Status Summary)")
-        print("8. Sort Vehicles in a Hub (Alphabetically)")
-        print("9. Sort Vehicles in Hub by Battery Level")
-        print("10. Sort Vehicles in Hub by Fare Price")
+        print("8. Sort Vehicles Alphabetically")
+        print("9. Sort Vehicles by Battery Level")
+        print("10. Sort Vehicles by Fare Price")
         print("11. Save Fleet to CSV")
-        print("12. Exit")
+        print("12. Save Fleet to JSON")
+        print("13. Exit")
 
         choice = input("Enter choice: ")
 
@@ -103,7 +107,11 @@ def main():
             fleet.save_to_csv()
 
         elif choice == "12":
-            fleet.save_to_csv()  # Auto-save on exit
+            fleet.save_to_json()
+
+        elif choice == "13":
+            fleet.save_to_csv()
+            fleet.save_to_json()
             print("Exiting...")
             break
 
