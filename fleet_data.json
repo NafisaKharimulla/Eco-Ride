@@ -8,5 +8,59 @@
             "status": "On Trip",
             "seating_capacity": 6
         }
+    ],
+    "School": [
+        {
+            "vehicle_type": "Car",
+            "vehicle_id": "1234",
+            "model": "5689",
+            "battery_level": 86,
+            "status": "On Trip",
+            "seating_capacity": 6
+        }
+    ],
+    "airport": [
+        {
+            "vehicle_type": "Car",
+            "vehicle_id": "1234",
+            "model": "Honda",
+            "battery_level": 85,
+            "status": "Avaliable",
+            "seating_capacity": 6
+        },
+        {
+            "vehicle_type": "Scooter",
+            "vehicle_id": "1596",
+            "model": "Activa",
+            "battery_level": 89,
+            "status": "On Trip",
+            "max_speed_limit": 30
+        }
+    ],
+    "Bangalore": [
+        {
+            "vehicle_type": "Car",
+            "vehicle_id": "C!",
+            "model": "Tesla",
+            "battery_level": 90,
+            "status": "Avaliable",
+            "seating_capacity": 6
+        },
+        {
+            "vehicle_type": "Scooter",
+            "vehicle_id": "S1",
+            "model": "Ola",
+            "battery_level": 85,
+            "status": "On Trip",
+            "max_speed_limit": 80
+        },
+        {
+            "vehicle_type": "Car",
+            "vehicle_id": "C2",
+            "model": "BMW",
+            "battery_level": 50,
+            "status": "Avaliable",
+            "seating_capacity": 4
+        }
     ]
 }

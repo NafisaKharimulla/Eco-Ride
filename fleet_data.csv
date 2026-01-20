@@ -1,2 +1,8 @@
 hub_name,vehicle_type,vehicle_id,model,battery_level,status,seating_capacity,max_speed_limit
 superMarket,Car,1258,Audi,65,On Trip,6,
+School,Car,1234,5689,86,On Trip,6,
+airport,Car,1234,Honda,85,Avaliable,6,
+airport,Scooter,1596,Activa,89,On Trip,,30
+Bangalore,Car,C!,Tesla,90,Avaliable,6,
+Bangalore,Scooter,S1,Ola,85,On Trip,,80
+Bangalore,Car,C2,BMW,50,Avaliable,4,
