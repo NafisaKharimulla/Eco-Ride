@@ -1,48 +1,8 @@
-from abc import ABC, abstractmethod
-
-class Vehicle(ABC):
-    def __init__(self, vehicle_id, model, battery_level, status="Available"):
+class Vehicle:
+    def __init__(self, vehicle_id: str, model: str, battery_percentage: float):
         self.vehicle_id = vehicle_id
         self.model = model
+        self.battery_percentage = battery_percentage
 
-        if battery_level < 0 or battery_level > 100:
-            raise ValueError("Battery level must be between 0–100")
-        self.battery_level = battery_level
-
-        # Encapsulation
-        self.__maintenance_status = "Good"
-        self.__status = status
-
-    #  Encapsulation Getters / Setters
-    def get_status(self):
-        return self.__status
-
-    def set_status(self, new_status):
-        allowed = ["Available", "On Trip", "Under Maintenance"]
-        if new_status not in allowed:
-            raise ValueError("Invalid status")
-        self.__status = new_status
-
-    def get_maintenance_status(self):
-        return self.__maintenance_status
-
-    def set_maintenance_status(self, new_status):
-        self.__maintenance_status = new_status
-
-    #  UC4: Abstract Fare Contract
-    @abstractmethod
-    def calculate_trip_cost(self, value):
-        pass
-
-    #  UC7: Data Integrity Duplicate Check
-    def __eq__(self, other):
-        return isinstance(other, Vehicle) and self.vehicle_id == other.vehicle_id
-
-    #  UC11: Clean Print
     def __str__(self):
-        return (
-            f"ID: {self.vehicle_id}, "
-            f"Model: {self.model}, "
-            f"Battery: {self.battery_level}%, "
-            f"Status: {self.__status}"
-        )
+        return f"Vehicle ID: {self.vehicle_id}, Model: {self.model}, Battery: {self.battery_percentage}%"
